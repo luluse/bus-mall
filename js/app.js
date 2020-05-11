@@ -27,10 +27,10 @@ new ProductImages('img/pen.jpg', 'pen', 'pen');
 new ProductImages('img/pet-sweep.jpg', 'pet-sweep', 'pet-sweep');
 new ProductImages('img/scissors.jpg', 'scissors', 'scissors');
 new ProductImages('img/shark.jpg', 'shark', 'shark');
-new ProductImages('img/sweep.jpg', 'sweep', 'sweep');
+new ProductImages('img/sweep.png', 'sweep', 'sweep');
 new ProductImages('img/tauntaun.jpg', 'tauntaun', 'tauntaun');
 new ProductImages('img/unicorn.jpg', 'unicorn', 'unicorn');
-new ProductImages('img/usb.jpg', 'usb', 'usb');
+new ProductImages('img/usb.gif', 'usb', 'usb');
 new ProductImages('img/water-can.jpg', 'water-can', 'water-can');
 new ProductImages('img/wine-glass.jpg', 'wine-glass', 'wine-glass');
 
