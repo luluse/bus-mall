@@ -74,6 +74,7 @@ function randomNumber(max){
 function displayImages(){
   var index = getRandomIndex();
   allProducts[index].render();
+  allProducts[index].views++;
 }
 
 function handleClick(event){
@@ -84,7 +85,6 @@ function handleClick(event){
   for (var i =0; i < allProducts.length; i++){
     if(imageThatWasClickedOn === allProducts[i].title){
       allProducts[i].votes++;
-      allProducts[i].views++;
       totalVotes++;
 
 
