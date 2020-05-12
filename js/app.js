@@ -1,100 +1,153 @@
 'use strict';
 
 var parent = document.getElementById('busMallImages');
-
+var uniqueIndexArray = [];
 var allProducts = [];
 var totalVotes = 0;
+var names = [];
+var votes = [];
 
-function ProductImages(url,alt,title){
-  this.filePath = url;
-  this.alt = alt;
-  this.title = title;
+function ProductImages(name, extension){
+  this.filePath = `img/${name}${extension}`;
+  this.alt = name;
+  this.title = name;
   this.votes = 0;
   this.views = 0;
   allProducts.push(this);
 }
 
-new ProductImages('img/bag.jpg', 'bag', 'bag');
-new ProductImages('img/banana.jpg', 'banana', 'banana');
-new ProductImages('img/bathroom.jpg', 'bathroom', 'bathroom');
-new ProductImages('img/boots.jpg', 'boots', 'boots');
-new ProductImages('img/breakfast.jpg', 'breakfast', 'breakfast');
-new ProductImages('img/bubblegum.jpg', 'bubblegum', 'bubblegum');
-new ProductImages('img/chair.jpg', 'chair', 'chair');
-new ProductImages('img/cthulhu.jpg', 'cthulhu', 'cthulhu');
-new ProductImages('img/dog-duck.jpg', 'dog-duck', 'dog-duck');
-new ProductImages('img/dragon.jpg', 'dragon', 'dragon');
-new ProductImages('img/pen.jpg', 'pen', 'pen');
-new ProductImages('img/pet-sweep.jpg', 'pet-sweep', 'pet-sweep');
-new ProductImages('img/scissors.jpg', 'scissors', 'scissors');
-new ProductImages('img/shark.jpg', 'shark', 'shark');
-new ProductImages('img/sweep.png', 'sweep', 'sweep');
-new ProductImages('img/tauntaun.jpg', 'tauntaun', 'tauntaun');
-new ProductImages('img/unicorn.jpg', 'unicorn', 'unicorn');
-new ProductImages('img/usb.gif', 'usb', 'usb');
-new ProductImages('img/water-can.jpg', 'water-can', 'water-can');
-new ProductImages('img/wine-glass.jpg', 'wine-glass', 'wine-glass');
-
 ProductImages.prototype.render = function(){
+
   var imageElement = document.createElement('img');
   imageElement.src = this.filePath;
   imageElement.alt = this.alt;
   imageElement.title = this.title;
 
   parent.appendChild(imageElement);
-};
-
-// helper function
-function randomNumber(min=0, max){
-  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
+new ProductImages('bag', '.jpg');
+new ProductImages('banana', '.jpg');
+new ProductImages('bathroom', '.jpg');
+new ProductImages('boots', '.jpg');
+new ProductImages('breakfast', '.jpg');
+new ProductImages('bubblegum', '.jpg');
+new ProductImages('chair', '.jpg');
+new ProductImages('cthulhu', '.jpg');
+new ProductImages('dog-duck', '.jpg');
+new ProductImages('dragon', '.jpg');
+new ProductImages('pen', '.jpg');
+new ProductImages('pet-sweep', '.jpg');
+new ProductImages('scissors', '.jpg');
+new ProductImages('shark', '.jpg');
+new ProductImages('sweep', '.png');
+new ProductImages('tauntaun', '.jpg');
+new ProductImages('unicorn', '.jpg');
+new ProductImages('usb', '.gif');
+new ProductImages('water-can', '.jpg');
+new ProductImages('wine-glass', '.jpg');
+
 
 // render 3 random images
-function getRandomImage(){
-  parent.textContent = '';
+function getRandomIndex(){
 
+  var index = randomNumber(allProducts.length);
 
-  // call randomNumber function to get random index position
-  var randomIndex = randomNumber(0, allProducts.length-1);
-  var randomIndexTwo = randomNumber(0, allProducts.length-1);
-  var randomIndexThree = randomNumber(0, allProducts.length-1);
+  while(uniqueIndexArray.includes(index)){
+    index = randomNumber(allProducts.length);
+  }
+  uniqueIndexArray.push(index);
 
-  while(randomIndex === randomIndexTwo || randomIndex === randomIndexThree || randomIndexTwo === randomIndexThree){
-    randomIndexTwo = randomNumber(0, allProducts.length-1);
-    randomIndexThree = randomNumber(0, allProducts.length-1);
+  if(uniqueIndexArray.length > 6){
+    uniqueIndexArray.shift();
   }
 
-  allProducts[randomIndex].render();
-  allProducts[randomIndex].views++;
-
-  allProducts[randomIndexTwo].render();
-  allProducts[randomIndexTwo].views++;
-
-  allProducts[randomIndexThree].render();
-  allProducts[randomIndexThree].views++;
+  return index;
 }
 
-getRandomImage();
+// helper function
+function randomNumber(max){
+  return Math.floor(Math.random() * max);
+}
 
-//event listener
-parent.addEventListener('click', function(){
-  var ImageThatwasClickedOn = event.target.title;
+function displayImages(){
+  var index = getRandomIndex();
+  allProducts[index].render();
+}
+
+function handleClick(event){
+  parent.textContent = '';
+
+  var imageThatWasClickedOn = event.target.title;
 
   for (var i =0; i < allProducts.length; i++){
-    if(ImageThatwasClickedOn === allProducts[i].title){
+    if(imageThatWasClickedOn === allProducts[i].title){
       allProducts[i].votes++;
-    }
-  }
-  getRandomImage();
-});
+      totalVotes++;
 
-if (totalVotes === 25){
-  parent.removeEventListener('click', function(){
-    for (var j=0; j< allProducts.length;j++) {
-      var message = document.createElement('p');
-      message.textContent = `${this.title[j]} has ${this.votes} and was shown ${this.views} times.`;
-      parent.appendChild(message);
+      if (totalVotes === 25){
+        parent.removeEventListener('click', handleClick);
+        makeNamesArray();
+      }
     }
   }
-  );
+  displayImages();
+  displayImages();
+  displayImages();
+}
+
+displayImages();
+displayImages();
+displayImages();
+
+//event listener
+parent.addEventListener('click', handleClick);
+
+
+function makeNamesArray(){
+  for (var i=0; i <allProducts.length; i++){
+    names.push(allProducts[i].title);
+    votes.push(allProducts[i].Votes);
+  }
+  generateChart();
+}
+
+function generateChart(){
+  var ctx = document.getElementById('myChart').getContext('2d');
+  var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: names,
+      datasets: [{
+        label: '# of Votes',
+        data: votes,
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)'
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  });
 }
