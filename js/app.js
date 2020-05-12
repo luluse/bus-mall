@@ -3,6 +3,7 @@
 var parent = document.getElementById('busMallImages');
 
 var allProducts = [];
+var totalVotes = 0;
 
 function ProductImages(url,alt,title){
   this.filePath = url;
@@ -41,7 +42,7 @@ ProductImages.prototype.render = function(){
   imageElement.title = this.title;
 
   parent.appendChild(imageElement);
-}
+};
 
 // helper function
 function randomNumber(min=0, max){
@@ -77,13 +78,23 @@ getRandomImage();
 
 //event listener
 parent.addEventListener('click', function(){
-  var ImagaThatwasClickedOn = event.target.title;
+  var ImageThatwasClickedOn = event.target.title;
 
   for (var i =0; i < allProducts.length; i++){
-    if(ImagaThatwasClickedOn === allProducts[i].title){
+    if(ImageThatwasClickedOn === allProducts[i].title){
       allProducts[i].votes++;
     }
   }
-
   getRandomImage();
 });
+
+if (totalVotes === 25){
+  parent.removeEventListener('click', function(){
+    for (var j=0; j< allProducts.length;j++) {
+      var message = document.createElement('p');
+      message.textContent = `${this.title[j]} has ${this.votes} and was shown ${this.views} times.`;
+      parent.appendChild(message);
+    }
+  }
+  );
+}
