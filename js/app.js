@@ -8,12 +8,13 @@ var names = [];
 var votes = [];
 var views = [];
 
-function ProductImages(name, extension){
+function ProductImages(name, extension, votes=0, views=0){
   this.filePath = `img/${name}${extension}`;
   this.alt = name;
   this.title = name;
-  this.votes = 0;
-  this.views = 0;
+  this.votes = votes;
+  this.views = views;
+  this.extension = extension;
   allProducts.push(this);
 }
 
@@ -25,29 +26,55 @@ ProductImages.prototype.render = function(){
   imageElement.title = this.title;
 
   parent.appendChild(imageElement);
+};
+
+function beginTest(){
+  var trackProducts = localStorage.getItem('trackAllProducts');
+  if (trackProducts === null){
+    new ProductImages('bag', '.jpg');
+    new ProductImages('banana', '.jpg');
+    new ProductImages('bathroom', '.jpg');
+    new ProductImages('boots', '.jpg');
+    new ProductImages('breakfast', '.jpg');
+    new ProductImages('bubblegum', '.jpg');
+    new ProductImages('chair', '.jpg');
+    new ProductImages('cthulhu', '.jpg');
+    new ProductImages('dog-duck', '.jpg');
+    new ProductImages('dragon', '.jpg');
+    new ProductImages('pen', '.jpg');
+    new ProductImages('pet-sweep', '.jpg');
+    new ProductImages('scissors', '.jpg');
+    new ProductImages('shark', '.jpg');
+    new ProductImages('sweep', '.png');
+    new ProductImages('tauntaun', '.jpg');
+    new ProductImages('unicorn', '.jpg');
+    new ProductImages('usb', '.gif');
+    new ProductImages('water-can', '.jpg');
+    new ProductImages('wine-glass', '.jpg');
+  } else {
+    trackProducts = JSON.parse(trackProducts);
+    console.log(trackProducts);
+    for (var i=0; i<trackProducts.length;i++){
+      var item = trackProducts[i];
+      var name = item.alt;
+      var extension = item.extension;
+      var votes = item.votes;
+      var views = item.views;
+      new ProductImages(name, extension, votes, views);
+    }
+  }
+  var trackVotes = localStorage.getItem('trackTotalVotes');
+  if (trackVotes === null){
+    totalVotes = 0;
+  } else {
+    totalVotes = parseInt(trackVotes);
+  }
+  displayImages();
+  displayImages();
+  displayImages();
 }
 
-new ProductImages('bag', '.jpg');
-new ProductImages('banana', '.jpg');
-new ProductImages('bathroom', '.jpg');
-new ProductImages('boots', '.jpg');
-new ProductImages('breakfast', '.jpg');
-new ProductImages('bubblegum', '.jpg');
-new ProductImages('chair', '.jpg');
-new ProductImages('cthulhu', '.jpg');
-new ProductImages('dog-duck', '.jpg');
-new ProductImages('dragon', '.jpg');
-new ProductImages('pen', '.jpg');
-new ProductImages('pet-sweep', '.jpg');
-new ProductImages('scissors', '.jpg');
-new ProductImages('shark', '.jpg');
-new ProductImages('sweep', '.png');
-new ProductImages('tauntaun', '.jpg');
-new ProductImages('unicorn', '.jpg');
-new ProductImages('usb', '.gif');
-new ProductImages('water-can', '.jpg');
-new ProductImages('wine-glass', '.jpg');
-
+beginTest();
 
 // render 3 random images
 function getRandomIndex(){
@@ -86,22 +113,19 @@ function handleClick(event){
     if(imageThatWasClickedOn === allProducts[i].title){
       allProducts[i].votes++;
       totalVotes++;
-
-
-      if (totalVotes === 25){
-        parent.removeEventListener('click', handleClick);
-        makeNamesArray();
-      }
     }
   }
-  displayImages();
-  displayImages();
-  displayImages();
+  if (totalVotes === 25){
+    parent.removeEventListener('click', handleClick);
+    makeNamesArray();
+  } else{
+    localStorage.setItem('trackAllProducts',JSON.stringify(allProducts));
+    localStorage.setItem('trackTotalVotes', totalVotes);
+    displayImages();
+    displayImages();
+    displayImages();
+  }
 }
-
-displayImages();
-displayImages();
-displayImages();
 
 //event listener
 parent.addEventListener('click', handleClick);
@@ -113,13 +137,16 @@ function makeNamesArray(){
     votes.push(allProducts[i].votes);
     views.push(allProducts[i].views);
   }
+
+  localStorage.removeItem('trackTotalVotes');
   generateChart();
 }
+
 
 function generateChart(){
   var ctx = document.getElementById('myChart').getContext('2d');
   var myChart = new Chart(ctx, {
-    type: 'bar',
+    type: 'horizontalBar',
     data: {
       labels: names,
       datasets: [{
