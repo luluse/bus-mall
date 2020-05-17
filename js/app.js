@@ -8,6 +8,8 @@ var names = [];
 var votes = [];
 var views = [];
 
+
+// create constructor function
 function ProductImages(name, extension, votes=0, views=0){
   this.filePath = `img/${name}${extension}`;
   this.alt = name;
@@ -103,7 +105,7 @@ function displayImages(){
   allProducts[index].render();
   allProducts[index].views++;
 }
-
+// local storage
 function handleClick(event){
   parent.textContent = '';
 
@@ -142,7 +144,7 @@ function makeNamesArray(){
   generateChart();
 }
 
-
+// chart
 function generateChart(){
   var ctx = document.getElementById('myChart').getContext('2d');
   var myChart = new Chart(ctx, {
@@ -248,7 +250,7 @@ function generateChart(){
     },
     options: {
       scales: {
-        yAxes: [{
+        xAxes: [{
           ticks: {
             beginAtZero: true
           }

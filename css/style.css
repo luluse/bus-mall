@@ -1,7 +1,45 @@
-/* canvas{
-
-} */
-
+main{
+  background-image: url(/img/bus-bkground.png);
+  background-repeat: no-repeat;
+  width: 960px;
+  margin: auto;
+  align-content: center;
+}
+#images{
+  position: relative;
+  top: 350px;
+}
 img{
-  width: 300px;
+  align-content: center;
+  position: relative;
+  top: 20px;
+  max-width: 300px;
+  max-height: 350px;
+  border-radius: 25px;
+  margin: 10px;
+  box-shadow: 5px 5px 8px grey;
+}
+img:hover{
+  cursor: pointer;
+  transform: scale(1.1);
+}
+h2{
+  font-family: 'Abril Fatface', cursive;
+  text-align: center;
+  font-size: 90px;
+  padding: 50px;
+  color: aliceblue;
+}
+footer{
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+  text-align: center;
+  padding: 10px;
+  background-color: rgb(191, 193, 194);
+  color: rgb(56, 55, 55)
+};
+#myChart{
+  margin-top: 50px;
+  padding: 50px 50px;
 }
